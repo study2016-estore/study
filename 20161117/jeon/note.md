@@ -56,7 +56,7 @@ sayHo();
      메소드를 재정의 하지 않는 이상 상위에서 정의한 내용을 그대로 공유. 
  * 객체 생성 당시 정의된 프로퍼티는 공유가 아닌 상속이 됨.
 
-
+---
 
 http://unikys.tistory.com/316  
 http://insanehong.kr/post/javascript-prototype/
