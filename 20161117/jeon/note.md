@@ -11,11 +11,11 @@
   : `Global`,`Object`, `String`, `Number`, `Boolean`, `Date`, `Array`, `Math`, `RegExp`, `Error`  
    자바스크립트 엔진이 구성하는 기본객체
    엔진이 구동되는 시점에서 바로 제공되기 때문에 따로 생성필요 없음
- * Native object(브라우져 내장 객체)
-  : `BOM`, `DOM`
+ * Native object(브라우져 내장 객체)  
+  : `BOM`, `DOM`  
   자바스크립트 엔진을 구동하는 브라우저에게서 빌드되는 객체  
   브라우져마다 구성이 다른 경우가 있음
- * Host Object(사용자 정의 객체)
+ * Host Object(사용자 정의 객체)  
   : 사용자 정의 객체
 
 ###객체 선언방법 2가지
