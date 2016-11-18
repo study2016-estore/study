@@ -37,6 +37,7 @@ sayHo();
  * built-In객체로서 최상위 레벨의 객체
  * 모든 객체는 `Object` 객체로부터 파생 됨 
 
+---
 
 #Prototype
 
@@ -48,6 +49,7 @@ sayHo();
  * 모든 함수 객체의 `Constructor`가 가지는 `property`
  * `prototype`을 통해 만들어질 개체들의 원형으로 사용할 객체
 
+---
 
 #Prototype Chain
 
@@ -57,6 +59,6 @@ sayHo();
  * 객체 생성 당시 정의된 프로퍼티는 공유가 아닌 상속이 됨.
 
 
-
 http://unikys.tistory.com/316
 http://insanehong.kr/post/javascript-prototype/
+
