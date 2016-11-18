@@ -1,0 +1,11 @@
+/*
+ * ex 3 Prototype chain 이해
+ */
+var A= function() {};
+var B = new A();
+A.prototype.x='hello';
+console.log(B.x); // prototype의 x가 실행
+------------------------------------------------------------
+var A= function() {this.x='hello';};
+var B = new A();
+console.log(B.X); // B의 X가 실행
