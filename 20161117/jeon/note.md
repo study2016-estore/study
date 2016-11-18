@@ -57,3 +57,6 @@ sayHo();
 - 객체 생성 당시 정의된 프로퍼티는 공유가 아닌 상속이 됨.
 
 ----------------------------------------------------------------------
+
+http://unikys.tistory.com/316
+http://insanehong.kr/post/javascript-prototype/
