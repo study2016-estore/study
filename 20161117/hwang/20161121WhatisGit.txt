@@ -1,0 +1,18 @@
+﻿161121
+깃의 장점
+SVN에 비해서 가볍다.
+SVN은 브런치마다 checkout이 필요하기때문에 용량측면에서 부담이 크다.
+
+git의 master = SVN의 trunk
+
+github에서 제공해주는 일정공간에 master가 존재
+
+master를 local로 가져온다 -> clone
+SVN과 다르게 브런치마다 clone할 필요가 없다.
+checkout branch명
+
+git add -> 로컬영역작업을 stage에 반영 (SVN에서 커밋할 파일을 체크하는과정과 비슷)
+git commit -> 스테이지에있는 작업을 local저장소에 반영
+git push -> 레포지토리에 반영
+
+
