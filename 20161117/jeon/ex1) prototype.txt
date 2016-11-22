@@ -1,4 +1,4 @@
-/*
+﻿/*
  * ex 1 Prototype 이해
  */
 function foo(x) {
