@@ -37,6 +37,7 @@ http://blog.naver.com/won2gonzo/220741696746
 
 깃허브 툴 사용
 http://richboy817.blog.me/220820381116
-
+ - 싱크 -> 풀 푸쉬 동시에
+ - Update 브런치명 ; Merge도 해줌
 깃 명령어
 https://github.com/channprj/frieday/wiki/git-%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%A0%95%EB%A6%AC
