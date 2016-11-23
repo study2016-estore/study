@@ -1,4 +1,5 @@
-﻿1. Scope(영역, 범위)
+﻿참고사이트 http://www.nextree.co.kr/p7363/
+1. Scope(영역, 범위)
  ·변수와 매개변수(Parameter)의 접근성과 생존기간
   Global Scope(전역) : 스크립트 전체에서 참조됨 (스크립트 어느 곳에서든 사용 가능)
   Local Scope(지역) : 정의된 function 안에서만 사용가능
