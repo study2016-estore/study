@@ -1,0 +1,28 @@
+﻿git bash Test
+
+
+박미진@DESKTOP-3B71UH9 MINGW64 ~/study (master)
+$ git add .
+
+박미진@DESKTOP-3B71UH9 MINGW64 ~/study (master)
+$ git add *
+
+박미진@DESKTOP-3B71UH9 MINGW64 ~/study (master)
+$ git commit -m "test commit"
+[master 06ec02f] test commit
+ 2 files changed, 6 insertions(+)
+ create mode 100644 20161124/m-park/GitBashTest.txt
+
+박미진@DESKTOP-3B71UH9 MINGW64 ~/study (master)
+$ git push
+Counting objects: 8, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (6/6), done.
+Writing objects: 100% (8/8), 858 bytes | 0 bytes/s, done.
+Total 8 (delta 1), reused 0 (delta 0)
+remote: Resolving deltas: 100% (1/1), completed with 1 local objects.
+To https://github.com/study2016-estore/study.git
+   fb5eb70..06ec02f  master -> master
+
+박미진@DESKTOP-3B71UH9 MINGW64 ~/study (master)
+$
