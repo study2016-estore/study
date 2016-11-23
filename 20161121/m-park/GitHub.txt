@@ -1,0 +1,52 @@
+﻿★SVN
+ - 쉬움
+ - 브런치를 만들 때마다 용량이 증가함
+  -> 무거움
+
+★Git
+ - 가벼움, 
+ - 빠름
+ - 분산된 환경에 적합
+
+★GitHub
+ - Git + 서버 제공
+ - 오픈 소스의 강력함
+http://resoneit.blogspot.jp/2013/03/svn-git.html
+
+
+★Git/GitHub 특징
+ - 원격저장소 <-> 로컬저장소 <-> 작업장
+  : 따라서 빠름, 브런치가 많아도 1개만 클로닝 하면 됨
+ - 다른 브런치 이동할 때 전 소스를 변환하는게 아니라,
+   변환점(차이, 스냅샷) 부분을 변경함
+
+ - 원격저장소(Remote Server) <-- Push 로컬 저장소
+ - 로컬 저장소 <--Commi 스테이지 (Staging Area)
+ - 스테이지 (Staging Area) <-- add 작업장 (work space / checkout)
+https://blog.outsider.ne.kr/865
+https://blog.outsider.ne.kr/866
+
+
+커밋 메시지
+http://b.ssut.me/55
+
+
+깃 설치
+http://hj_veronica.blog.me/220803877901
+
+깃 깃허브 연결
+http://ourcstory.tistory.com/125
+http://blog.naver.com/won2gonzo/220741696746
+http://nalam.tistory.com/152
+
+
+깃허브 툴 사용
+http://richboy817.blog.me/220820381116
+ - 싱크 -> 풀 푸쉬 동시에
+ - Update 브런치명 ; Merge도 해줌
+
+깃 명령어
+http://emflant.tistory.com/123
+http://blog.naver.com/bluefallsky/140184548864
+https://git-scm.com/book/ko/v2/Git-%EB%AA%85%EB%A0%B9%EC%96%B4-Branch%EC%99%80-Merge
+https://github.com/channprj/frieday/wiki/git-%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%A0%95%EB%A6%AC
