@@ -20,6 +20,9 @@ http://resoneit.blogspot.jp/2013/03/svn-git.html
  - 다른 브런치 이동할 때 전 소스를 변환하는게 아니라,
    변환점(차이, 스냅샷) 부분을 변경함
 
+ - 원격저장소(Remote Server) <-- Push 로컬 저장소
+ - 로컬 저장소 <--Commi 스테이지 (Staging Area)
+ - 스테이지 (Staging Area) <-- add 작업장 (work space / checkout)
 https://blog.outsider.ne.kr/865
 https://blog.outsider.ne.kr/866
 
@@ -43,6 +46,7 @@ http://richboy817.blog.me/220820381116
  - Update 브런치명 ; Merge도 해줌
 
 깃 명령어
+http://emflant.tistory.com/123
 http://blog.naver.com/bluefallsky/140184548864
 https://git-scm.com/book/ko/v2/Git-%EB%AA%85%EB%A0%B9%EC%96%B4-Branch%EC%99%80-Merge
 https://github.com/channprj/frieday/wiki/git-%EC%82%AC%EC%9A%A9%EB%B2%95-%EC%A0%95%EB%A6%AC
