@@ -4,7 +4,7 @@
 - 리눅스 토발즈
 - `commit`은 로컬 저장소에서 이루어 지는게 특징
 
-![관계도](git-transport.png)
+![관계도](git-transport.png){.aligncenter}
 
 ####Github
 - Git 버전 컨트롤 시스템에 기반한 오픈소스 프로젝트를 위한 소셜 저장소
