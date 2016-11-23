@@ -1,3 +1,26 @@
-﻿##Prototype
+﻿Object / Prototype / PrototypeProferty / PrototypeChain
 
-eweeww??
+★Object 객체
+ - Javascript 는 객체를 생성하면
+   그 객체의 변수, 함수 등 메모리에 다 저장됨
+   똑같은 객체를 만들더라도 메모리 공유를 하지 않음.
+ - 모든 객체는 Object (최상위 객체)를 가진다
+ - 실제로는 Proferty , Method로 구성되어 있다.
+
+★객체의 종류
+ - Built-in Object (자바스크립트 내장객체)
+ - Navive Object (브라우저 내장 객체)
+ - Host Object (사용자 정의 객체)
+
+http://insanehong.kr/post/javascript-object/
+
+★Prototype
+ - 자기자신을 생성하기 위해 사용된 객체의 원형을 프로토타입이라함
+ - 결국 연결의 끝은 Object（최상위 객체）가 됨.
+
+★Prototype Proferty
+ - Prototype Profery 는 객체가 생성 될 당시 만들어지는 자신의 원형이 될 prototype 객체를 가르킨다.
+ - 하나의 객체를 생성하게 되면 프로토타입 생성(Clonig)됨
+★Prototype Chain
+상위객체의 프로퍼티와 메소드를 공유하게 됨
+ 
