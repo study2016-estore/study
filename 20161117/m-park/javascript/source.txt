@@ -1,0 +1,30 @@
+﻿//#예제 1.
+var A = function () {
+    this.x = function () {
+         console.log('hello');
+    };
+};
+A.x=function() {
+    console.log('world');
+};
+var B = new A();
+var C = new A();
+B.x();
+> hello
+C.x();
+> hello
+
+//#예제 2.
+var A = function () { };
+A.x=function() {
+    console.log('hello');
+};
+A.prototype.x = function () {
+     console.log('world');
+};
+var B = new A();
+var C = new A();
+B.x();
+> world
+C.x();
+> world
