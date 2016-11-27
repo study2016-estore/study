@@ -7,5 +7,5 @@
 - Block Level Scope
 - Lexical Scope
 
-# Closure
+## Closure
 - Basic
