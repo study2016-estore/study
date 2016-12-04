@@ -1,0 +1,79 @@
+﻿클로저
+
+ - 클로저는 독립적인 (자유) 변수를 가리키는 함수이다. 또는, 클로저 안에 정의된 함수는 만들어진 환경을 '기억한다'.
+ - 외부 스코프를 기억함. 함수를 리턴하는 형식으로 많이 쓰임.
+ - 외부 함수의 지역 변수 및 변수 스코프 객체의 체인 관계를 유지할 수 있는 구조를 클로저(closure)
+
+function A(x){
+   return function B(y){
+       return x + y;
+   }
+}
+
+var sub = A(5);
+var sub1 = A(6);
+
+메모리 상에는 sub , sub1 2개 다 A를 만들어내고 있음.
+이 건 자동 메모리 삭제가 되지 않기 때문에
+sub = null; 이 필요함
+
+
+
+https://developer.mozilla.org/ko/docs/Web/JavaScript/Guide/Closures
+http://jusungpark.tistory.com/32
+https://blog.outsider.ne.kr/506
+https://blog.outsider.ne.kr/506
+
+
+var i;
+
+    for( i = 0 ; i < 10; i++){
+       setTimeout(function(){consol.log(i);},100);
+    }
+
+
+
+
+10 10 10 …
+
+\
+
+var i;
+for(i = 0 ; i < 10 ; i++){
+    (function(j){
+        setTimeout( function(){console.log(j);} , 10000);
+    })(i);
+}
+
+For문을 돌릴 때 펑션을 하나씩 새로 만듬
+메모리에 쌓아서 순서대로 처리해나감
+
+
+var i;
+var d = new Date();
+for(i = 0 ; i < 10 ; i++){
+    (function(j){
+        setTimeout( function(){console.log(d.getSeconds());} , 5000);
+    })(i);
+}
+
+d.getSeconds()); -> 실행되는 시간은 같은 시간 대로 나임..
+미리 다 저장해놓고 실행되기 때문에.
+
+객체지향할 때 클로저를 이용하여 사용됨.
+
+function foo(name){
+	return {
+  	getName : function(){
+    	return name;
+    },
+    setName : function(_name){
+    	name = _name;
+    }
+  }
+}
+
+var ccc = foo("수연");
+console.log(ccc.getName());
+ccc.setName("미진");
+console.log(ccc.getName());
