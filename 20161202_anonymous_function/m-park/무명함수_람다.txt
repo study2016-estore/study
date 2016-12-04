@@ -1,0 +1,57 @@
+﻿콜백함수, 무명함수, 익명함수
+anonymous_function
+
+함수
+ - 선언식
+ : 처음 스크립트 컨파일 될 때부터 메모리 저장됨
+  function fname(){}
+ - 표현식
+ : 사용 될 때 불림 
+http://insanehong.kr/post/javascript-function/
+
+무명함수는 표현식임.
+
+프로그램 객체 레벨 
+조건 3개 충족하면 일급객체
+1. 객체 변수 넣을 수 있다.
+2. 인자에 객체 넣을 수 있다.
+3. 반환값으로 함수 쓸 수 있다.
+4. 자료구조에 저장 됨
+
+일급함수
+ - 익명함수
+ - 런타임
+
+javascript 일급객체/ 일급함수
+
+함수의 표현식
+1. 기명함수 표현식
+ var name = function fname(){}
+2. 익명함수 표현식
+var name = function(){}
+
+3. 기명 즉시 실행 함수
+(function fname(){}());
+
+4. 익명 즉시 실행 함수
+ (function(){}());
+(function {})();
+
+ - 변수명이 겹치는 것을 예방할 수 있음
+ - 1회성 사용으로 메모리 활용 좋음
+
+선언식  - 처음에 다 로딩됨
+↓
+글로벌 레벨 스코프
+↓
+함수 레벨 스코프 (런타임)
+
+람다
+- 열린 람다
+ : 자유 변수가 포함되어 있을 경우 열린 람다가 된다.
+- 닫힌 람다
+
+
+
+https://ko.wikipedia.org/wiki/%EB%9E%8C%EB%8B%A4_%EB%8C%80%EC%88%98
+https://hyunseob.github.io/2016/09/17/lambda-anonymous-function-closure/
