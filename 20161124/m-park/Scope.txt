@@ -1,0 +1,28 @@
+﻿*스코프(Scope)
+ - 함수레벨 스코프 (Function Level Scope)
+ :  함수 내부 전체에서 유효한 식별자가 된다.
+  ex ) 
+   function foo() {
+        if(true) {
+            let color = 'blue';
+            console.log(color); // blue
+        }
+        console.log(color); // ReferenceError: color is not defined
+    }
+    foo();
+    여기에서 color의 blue가 출력이 되는 것은 var가 함수레벨 스코프이기 때문에
+
+ - 블록레벨 스코프 (Block Lever Scope)
+ : let, const 를 이용하여 해당 블럭({ }) 내에서만 사용하게 한다
+   ECMA Script 6 = ES6 부터
+
+ - 렉시컬(Lexical) 스코프 함수, 객체 <-> 동적스코프 (Dynamic Scope) 
+ : 변수를 찾을 때 가장 가까운 순으로 찾은 다음에 없으면 undef
+   1. 내 객체 
+   2. 나의 부모,
+   3. global
+ : Lexical <- 관련이 있다. 관련 있는 것들을 찾움ㅋㅋㅋ
+
+참고
+http://meetup.toast.com/posts/86
+http://www.nextree.co.kr/p7363/
