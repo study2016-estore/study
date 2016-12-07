@@ -1,5 +1,4 @@
-# 2016/12/08 
-# 대망의 this
+# 2016/12/08 this, Function
 
 ## this란?
 - Method를 호출한다
