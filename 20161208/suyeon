@@ -1,0 +1,153 @@
+function abc(){
+	this.val = "test";
+}
+
+var ccc = new abc();
+// adb()는 new를통해 ccc라는 이름을가진 객체로 생성된다.
+
+console.log(ccc.val); // ??
+// result : test
+reason : ccc의 val을 호출하라 ! 앞서 생성한 객체가 가지고있는 val의 "test" 가 존재하기 때문에 출력값은 test가 된다. 
+
+console.log(window.val)
+// result : undefined
+ reason : 글로벌변수로 window에 할당된 val도 없고 abc()를 실행한적도 없어 this.val에 값이 할당된 시점도 없기때문에 현재 window에는 val의 값이 존재하지 않는다.
+
+
+
+
+function abc(){};
+var ccc = new abc();
+abc.prototype.setValue = function(v){
+	this.val = v;
+}
+// abc(){} 라는 값을 가진 ccc객체가 생성된다.
+abc.prototype.setValue에 this.val 에 값을 대입해주는 함수를 하나 생성하는데 , 이 prototype.setValue를 ccc객체도 레퍼런스 하고있기때문에 해당 함수를 사용 할 수 있게된다.
+
+ccc.setValue("cyka");
+// ccc객체도 setValue함수를 레퍼런스하고있기때문에 사용할 수 있다. ccc.setValue("cyka")를 호출하고 this.val 을 하고있다. 이시점에서의 this는 this를 호출한 ccc의 val을 의미하고 있기때문에 ccc의 val에 cyka라는 값이 대입된다.
+
+console.log( ccc.val );
+//result : cyka
+
+console.log( window.val );
+// result : undefined
+현재 window에 val이라는 값이 생성될 상황이 벌어지지 않았기 때문에 window에게서 부를 val이 존재하지 않는다.
+
+
+
+
+
+
+val = 123;
+function abc(){
+	this.val = "cyka18";
+}
+
+console.log( window.val) 
+// result : 123 
+ reason : global변수 val = 123; 은 글로벌객체 window에 존재. 그러므로 window의 val은 123을 출력하게 된다.
+Method를 호출한 당시의 객체가 저장되어 있는 property 글로벌인 window를호출! val이 존재!
+
+abc();
+//abc()라는 함수를 부름으로써 인해 this.val = "cyka18";이 실행된다. 이시점에서 this는 val이라는 함수를 찾게되는데 현재 val이라는 변수를 가진 객체로서의 존재는 글로벌인 window밖에없음으로 window객체에 cyka18이 적용도게 된다.
+함수가선언된 당시에 그안에서의 this는 window를 가르친다!
+
+console.log( abc.val ) 
+// result : undefined
+ reason : abc는 현재 함수형태로 선언만 된 상태이다 abc자체가 객체의 존재가 아니기때문에 val이라는 범위를 가진 상태가 아니다. abc는 val이라는 변수를 가진 객체가 존재 하지 않기때문에 undefined를 출력한다.
+Method를 호출한 당시의 객체가 저장되어 있는 property abc객체가없다. 그래서 부를 val이없다!
+
+console.log( window.val ) 
+// result : cyka18
+// reason : abc();가 실행되는 시점에서 this.val="cyka18"은 window의val에 cyka18을 입력시키고 있다. 그러므로 window.val의 출력값은 cyka18이 된다.
+
+
+
+
+
+
+function foo(value){
+	return this.val = value;
+}
+
+var ccc = foo('cyka1818');
+// foo라는 함수에 cyka1818이라는 값을 넘겨주어 this.val=cyka1818을 적용시킨후 ccc에 리턴해준다. 
+이때 foo라는 함수가 실행되는데 위의 함수는 선언된형태(객체x)에서 this를 부르고 있기때문에 this는 window를 가르키고있다. window의 val에 cyka1818이 대입되게 된다. ccc는 cyka1818 이라는 값을 가지게된다. 
+
+console.log(ccc.val);
+// result : undefined
+ reason : ccc의 val을 부르고있는데 ccc는 val이라는 값을 가지고 있지않는다 . 위의 var ccc = foo("cyka1818") ; 에서는 ccc라는 스코프체인과 val이라는 변수를가진 객체를 생성하는 것이 아니라 foo()를 실행후 cyka1818이라는 값만 리턴받게되므로 ccc의 val을 호출하려고해도 ccc는 val을 가지고 있지 않기때문에 돌려줄 값이 없다.
+
+console.log(window.val); 
+// result : window의 val은 var ccc =foo("cyka1818") 이 실행되는 시점에 this가 window의 val을 가르키고 있기때문에 window의 val에 cyka1818이 대입되고있다. 때문에 "cyka1818" 이 출력된다.
+
+ 
+
+
+
+
+
+
+
+a = 1;
+var test = {
+	a : 1000,
+    getA : function(){
+  		console.log(this.a);
+	}
+}
+
+test.getA();
+// result : 1000
+reason : test라는 함수객체를 부르고있다. 함수객체 안에서의 메소드 getA는 그위의 함수인 test가 가지고있는 a에 접근하게된다. 
+그러므로 test.getA()를 하게되면 getA의 this는 test의 a를 가르키고있다. (test부모 getA자식 개념? -> 부모를이용해 자식을 부르게되면 자식의 this는 부모가 가지고있는 프로퍼티들을 가르키게된다. )
+
+test.getA.apply(null)
+// result : 1
+reason : apply와 call은 부르는 시점의 this를 정할 수 있게해준다! getA를 부를때 null을 넣어줌으로써 부를때의 시점을 global로 변화시키게된다. 그러므로 global함수의 a를 부르게되므로 1을 출력!
+
+
+
+
+
+
+
+var scope = "global";
+
+function scopeCheck() { 
+	var scope = "outterLocal";
+	alert("(1) "+this.scope); // 1 
+
+	var object = new Object();
+	object.scope = "field";
+	object.scopeCheck = function() { alert("(2) "+this.scope); } 
+	object.scopeCheck(); // 2
+		function inner() { 
+			var scope = "innerLocal";
+			alert("(3) "+this.scope); 
+		}
+	inner(); // 3
+
+	var anotherObject = new Object();
+	anotherObject.scope = "anotherField";
+	anotherObject.scopeCheck = function() { alert("(4) "+this.scope); } 
+	object.scopeCheck = anotherObject.scopeCheck;
+
+	object.scopeCheck(); // 4
+}
+scopeCheck();
+
+1 . result : global 
+    reason : scopeCheck라는 함수선언만 된상태에서 this를 부르고 있으므로 이때의 this는 window를 가르킨다. window의 스코프는 var scope = "global"; 이라는 값을 가지고 있기 때문에 global 이 출력되게 된다.
+
+2. result : field
+   reason : new Object()를 통해 object는 자신만의 스코프체인과 실행영역을 가지게 된다. 그러므로 object.scipeCheck() 를 하게되면 object의 scopeCheck()함수를 부르게되고 그함수의 this는 object가 호출했음으로 object의 scope를 가르키게된다. 
+object 의 scope의 값은 field 이므로 field를 출력하게 된다.
+
+3. result : global 
+   reason : inner();을 해주면 inner함수가 한번실행되는데 inner안의 this는 선언된 함수를 부르고 있기때문에 window를 가르키고있다. 그러므로 global을 출력하게 된다. (outterLocal 이 아닌이유 현재 scopeCheck 라는 함수의 선언도 다끝나지 않은 상태일뿐더러 inner()은 scopeCheck의 자식으로 써 불리고 있지 않다)
+
+4. result : field 
+   reason : new Object()로 새로운 객체를 생성해 주어 anotherObject도 자신만의 실행영역과 스코프체인을 가지고 있다. object.scopeCheck = anotherObject.scopeCheck ; 를 실행해주는 시점에서 anotherObject가 가지고있는 scopeCheck의 값 (function() { alert("(4) "+this.scope); } 을 넘기게된다. object.scopeCheck는 function() { alert("(2) "+this.scope); } 이함수를 가지고있다가  function() { alert("(4) "+this.scope); } 이함수로 변경되게된다. 그리고나서 object.scopeCheck() 로  function() { alert("(4) "+this.scope); } 함수를 부르고있으므로 이때 this를 호출한 object의 scope를 부르고있으므로 field가 출력되게 된다.
+
