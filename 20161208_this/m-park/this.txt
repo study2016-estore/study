@@ -1,0 +1,119 @@
+﻿this의 4 가지 패턴
+1 : 메서드 호출 패턴 
+2 : 함수 호출 패턴 
+3 : 생성자 호출 패턴 
+4 : apply, call 호출 패턴
+여기서 중요한 것은 '호출'을 볼 수 있음
+왜냐하면 「호출」에 "this"는 좌우되기 때문
+
+javascript의 this가 해당 함수 호출 패턴에 따라 어떻게 객체를 참조(바인딩)하는지에 대한 규칙
+1. 기본적으로 this는 전역 객체를 참조한다.
+2. 메소드 내부의 this는 해당 메소드를 호출한 부모 객체를 참조한다.
+3. 생성자 함수 코드 내부의 this는 새로 생성된 객체를 참조한다.
+4. call()과 apply() 메소드로 함수를 호출할 때, 함수의 this는 첫 번째 인자로 넘겨받은 객체를 참조한다.
+5. 프로토타입 객체 메소드 내부의 this도 해당 메소드를 호출한 부모 객체를 참조한다.
+6. JavaScript의 this 키워드는 접근제어자 public 역할을 한다.
+
+this란 
+- . 앞에 있다!!
+
+예제 1
+val = 123;
+function abc(){
+	this.val = "cyka18";
+}
+
+console.log( window.val) //윈도우객체 안에 있는 123을 찍음
+abc();
+console.log( abc.val ) //abc는 함수이기 때문에 스코프가 없음 undef
+console.log( window.val ) // abc()함수를 통해 윈도우 객체인 val를 바꿈
+
+예제 2
+function abc(){
+	this.val = "test";
+}
+
+var ccc = new abc();
+console.log(ccc.val); //ccc는 new 키워드로인해 함수가 됨 때문에 val를 가짐
+                      //test가 찍히게 됨
+
+console.log(window.val) //윈도우에는val가 없기 때문에 undef
+
+
+예제3
+function abc(){};
+var ccc = new abc();
+abc.prototype.setValue = function(v){
+	this.val = v;
+}
+
+ccc.setValue("cyka");
+console.log( ccc.val ); //생성시 abc프로퍼티가 생김. ccc는 abc프로퍼티를 찾게됨.
+                        //따라서 cyka가 나옴
+console.log( window.val ); //window객체에는 val가 없으니 undef
+
+
+예제4
+function foo(value){
+	return this.val = value; 
+}
+
+var ccc = foo('cyka1818'); //함수임. 따라서 여기서 this는 윈도우객체..
+console.log(ccc.val); //ccc안에는 문자열 'cyka1818'가 들어있음.. 함수 리턴 받은 값
+console.log(window.val); // 아까 함수에서 정의한 cyka1818이 출력됨
+
+
+예제5
+a = 1;
+var test = {
+	a : 1000,
+        getA : function(){
+  		console.log(this.a);
+	}
+}
+
+test.getA(); //실행시킨 test의 a를 찾음 1000 출력
+test.getA.apply(null); //getA의 스코프를 일시적으로 null <- 없으니까 제일 상위 스코프 Global로 바인딩 시켜줌
+
+
+
+예제6
+var scope = "global";
+
+function scopeCheck() { 
+	var scope = "outterLocal";
+	alert("(1) "+this.scope); // global 출력됨.. scopeCheck는 객체로 선언 되지 않음
+
+	var object = new Object();
+	object.scope = "field";
+	object.scopeCheck = function() { alert("(2) "+this.scope); } 
+	object.scopeCheck(); // field. 객체로 선언 된 object의 scope에 "field";를 넣음. 이때의 디스는 실행시킨놈의 scope를 봄
+		function inner() { 
+			var scope = "innerLocal";
+			alert("(3) "+this.scope); 
+		}
+	inner();
+        //JavaScript에서는 내부 함수 호출 패턴을 정의해 놓지 않기 때문
+       //내부 함수도 결국 함수 -> 함수 호출로 취급되어 함수 호출 패턴 규칙에 따라 내부 함수의 this는 전역 객체를 참조
+
+	var anotherObject = new Object();   //anotherObject만의 스코프을 가짐.
+	anotherObject.scope = "anotherField";
+	anotherObject.scopeCheck = function() { alert("(4) "+this.scope); } 
+	object.scopeCheck = anotherObject.scopeCheck;
+        //함수를 넘기게 됨 function() { alert("(4) "+this.scope); }  
+	object.scopeCheck(); // 함수를 넘겼지만, 여기서 this는 호출한 놈을 보기 때문에 object스코프를 보게됨
+                             // field 출력됨
+}
+scopeCheck();
+
+
+
+
+
+-----------------
+Window는 브라우저의 객체
+Object 는 객체의 조상님 window객체랑 조상님 Object 객체는 다름.
+
+ Object (조상님)은 window스코프를 보고 있음 <- 제일 큰 스코프
+
+Var 는 객체내에서 선언 되면 외부에서 접근이 안됨 private
