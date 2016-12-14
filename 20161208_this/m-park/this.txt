@@ -114,6 +114,4 @@ scopeCheck();
 Window는 브라우저의 객체
 Object 는 객체의 조상님 window객체랑 조상님 Object 객체는 다름.
 
- Object (조상님)은 window스코프를 보고 있음 <- 제일 큰 스코프
-
 Var 는 객체내에서 선언 되면 외부에서 접근이 안됨 private
