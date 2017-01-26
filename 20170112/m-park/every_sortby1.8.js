@@ -12,7 +12,7 @@
   // Determine whether all of the elements match a truth test.
   // Aliased as `all`.
   _.every = _.all = function(obj, predicate, context) {
-    // 인수의 유형을 판별하는 곳에 넣음
+    // 인수의 유형을 판별하는 곳에 넣음, context 가 있으면 this가 실행될 위치ㄷ설정
     predicate = cb(predicate, context);
     // obj가 배열이나 argument객체이면 keys는 undef
     // 아니면 오브젝트의 키값들을 keys에 넣음
@@ -28,7 +28,7 @@
     }
     return true;
   };
-  // 인수의 유형을 확인하는 함수
+  // 인수의 유형을 확인하는 함수, context 조건에 따라 설정
   var cb = function(value, context, argCount) {
     // _.iteratee함수가 생성되어 있지 않으면 생성 후 다시 cb를 호출 
     if (_.iteratee !== builtinIteratee) return _.iteratee(value, context);
@@ -113,20 +113,23 @@
     };
   };
 
-// --------------------------------------------------------------------------------------------------------- 잘 모르겠음 한번 더 봐야할 듯
+// --------------------------------------------------------------------------------------------------------- 
 
   // obj를 path함수로 평가해서 재구성한 것을 리턴　_.invoke(list, methodName, *arguments) 
-  // resArgs 실행 시 invoke에 정의된 무명함수를 파라메타로 넘김. 넘김 받은 무명함수로 함수를 만들어서 넘김ㅋ
+  // list의 각 요소에 대해 methodName로 지정된 함수를 실행한다. * arguments는 지정된 함수에 전달된다.
+  // _.invoke ( [[ 5, 1, 7 ] , [ 3, 2, 1 ]] , 'sort' );
+  // => [ 1, 5, 7 ] , [ 1, 2, 3 ]
+  // resArgs 실행 시 invoke에 정의된 무명함수를 파라메타로 넘김. 넘김 받은 무명함수로 함수를 만들어서 넘김
   // Invoke a method (with arguments) on every item in a collection.
-  _.invoke = restArgs(function(obj, path, args) {
+  _.invoke = restArgs( function(obj, path, args) {
     var contextPath, func;
     // path 얘가 펑션인지 확인
     if (_.isFunction(path)) {
       func = path;
     } else if (_.isArray(path)) {
-      // array 이면 contextPath는 처음부터 마지막 1번째까지 다 꺼냄 다 
+      // array 이면 contextPath는 처음부터 마지막 1번째까지 다 꺼냄, 싹 다 
       contextPath = path.slice(0, -1);
-      // path에 마지막 어레이값을 집어 넣음
+      // path에 마지막 어레이를 집어 넣음
       path = path[path.length - 1];
     }
     // 각 값에 매핑하여 값의 새 배열을 생성 function(context) 이것이 조건.. context는 map에서 넘겨주는 값
@@ -157,7 +160,7 @@
       for (; index < length; index++) {
         rest[index] = arguments[index + startIndex];
       }
-      //func 기준을 실행
+      //func 기준을 여기 오브젝트를 기준으로 실행
       switch (startIndex) {
         case 0: return func.call(this, rest);
         case 1: return func.call(this, arguments[0], rest);
