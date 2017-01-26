@@ -1,0 +1,195 @@
+﻿【_.each(list, iteratee, [context]) 】
+iteratee에서 지정한 함수에 list(배열 또는 오브젝트)의 각각의 값(val, index, list)을 적용시켜서 반환.
+
+_.each = _.forEach = function(obj, iteratee, context) {
+    iteratee = optimizeCb(iteratee, context);
+    var i, length;
+
+    // 인수가 배열이나 arguments일때 true를 반환
+    if (isArrayLike(obj)) {
+      // 받은 배열의 인덱스를 0부터시작해 루프시작 
+      // 2의인자(함수로넘어온)에 (element, index, list)을 전달
+      for (i = 0, length = obj.length; i < length; i++) {
+        iteratee(obj[i], i, obj);
+      }
+    } else {
+    // Object일때 처리
+      // 오브젝트의 키값으로 배열로 만듬       
+      var keys = _.keys(obj);
+      //(value, key, list)를 전달
+      for (i = 0, length = keys.length; i < length; i++) {
+        iteratee(obj[keys[i]], keys[i], obj);
+      }
+    }
+    return obj;
+};
+
+
+【contextの例】
+// context는 this를 사용할수있게하는 오브젝트.
+// context가 있을경우 함수내에서 this를 사용할수있다.
+var context = {x:19,y:45};
+_.each([10, 20, 30],function(elm,i){
+  console.log(i,elm,this.x,this.y * 2);
+},context);
+// 0 10 19 90
+// 1 20 19 90
+// 2 30 19 90
+
+
+【optimizeCb = function(func, context, argCount)】
+var optimizeCb = function(func, context, argCount) {
+    // 제 2의 인수의 context가 undefined의 경우, 그대로 func가 반환된다.
+    if (context === void 0) return func;
+
+    // 메소드 내부에서 iteratee = optimizeCb(iteratee, context); 의 형식으로 사용 되었을 때,
+    // 제 3의 인수의 argCount의 값에의해서 처리가 나뉘어진다.
+    switch (argCount == null ? 3 : argCount) {
+    // context를 func의 디스로해서 arguments의 수가 조건에의해 늘어난다.
+      case 1: return function(value) {
+        return func.call(context, value);
+      };
+      case 2: return function(value, other) {
+        return func.call(context, value, other);
+      };
+      case 3: return function(value, index, collection) {
+        return func.call(context, value, index, collection);
+      };
+      case 4: return function(accumulator, value, index, collection) {
+        return func.call(context, accumulator, value, index, collection);
+      };
+    }
+    //context가 undefined가아닌데  argCount가 undefined의 경우.
+    return function() {
+      return func.apply(context, arguments);
+    };
+};
+
+
+【map_.map(list, iteratee, [context]) 】
+배열 또는 오브젝트의 각 값을 iteratee에서 지정한 함수에 적용해서 결과를 배열로 받는다.
+
+_.map = _.collect = function(obj, iteratee, context) {
+    iteratee = cb(iteratee, context);
+    // obj가 배열이아니면 Object의 key값을 배열로 만든다
+    var keys = !isArrayLike(obj) && _.keys(obj),
+    // 위에값의 길이를 구한다
+    length = (keys || obj).length,
+    // 길이만큼의 배열을 만든다
+    results = Array(length);
+
+    for (var index = 0; index < length; index++) {
+      // key로만들어진배열은 key값을 아니면 인덱스값을 currentKey에 반환.
+      var currentKey = keys ? keys[index] : index;
+
+      //두번째 인수의 인수값으로 value , key OR index , obj 를 넘긴다
+      //그값을 반환할 result 배열에 담는다
+      results[index] = iteratee(obj[currentKey], currentKey, obj);
+    }
+    return results;
+};
+인자가 list 이면 반복문을 돌면서 function( index 번째 값, index, list)  의 함수를 호출하고 
+인자가 map 이면 반복문을 돌면서 function( key 에 해당하는 값, key, map) 의 함수를 호출 한다.
+
+
+【_.reduce(list, iteratee, [memo], [context]) 】
+배열 또는 오브젝트의 이전 값을 메모화(기록)해서 현재의 인덱스의 값과 같이 iteratee에 전달하여 각값을 처리한다. 누적된 결과를 반환
+_.reduce = _.foldl = _.inject = createReduce(1);
+_.reduceRight = _.foldr = createReduce(-1);
+
+function createReduce(dir) {
+    // 이 함수가 동작하여 누적된 memo값을 돌려준다.
+    function iterator(obj, iteratee, memo, keys, index, length) {
+      for (; index >= 0 && index < length; index += dir) {
+        var currentKey = keys ? keys[index] : index;
+        // 현재 memo에는 iteratee에서 실행된 값이 계속 누적되고 있다.
+        memo = iteratee(memo, obj[currentKey], currentKey, obj);
+      }
+      // 루프가 끝나면 누적된 memo를 반환한다.
+      return memo;
+    }
+
+    return function(obj, iteratee, memo, context) {
+      iteratee = optimizeCb(iteratee, context, 4);
+      var keys = !isArrayLike(obj) && _.keys(obj),
+          length = (keys || obj).length,
+
+      // 시작할 인덱스를 지정한다.
+      index = dir > 0 ? 0 : length - 1;
+
+      // arguments가 3개이하(memo가 지정되어있지 않는경우)에는 
+      // 제일 처음의 value를 memo에 저장 하고 인덱스를 다음인덱스로 지정 
+      // 즉 인덱스를 지정하지 않았을때는 제일앞 또는 제일뒤 부터 시작하도록 한다.
+      if (arguments.length < 3) {
+        memo = obj[keys ? keys[index] : index];
+        index += dir;
+      }
+      return iterator(obj, iteratee, memo, keys, index, length);
+    };
+  }
+
+
+【_.find(list, predicate, [context]) 】
+배열 또는 오브젝트의 값중에 predicate의 조건에 만족하는 제일 처음의 값을 반환한다.
+
+_.find = _.detect = function(obj, predicate, context) {
+    var key;
+    if (isArrayLike(obj)) {
+      // findIndex는 배열의 값중에 preicate 조건에 만족하는 제일 처음값의 인덱스를 반환한다.
+      key = _.findIndex(obj, predicate, context);
+    } else {
+      // findKey는 오브젝트의 값중에 predicate의 조건에 만족하는 최초의 키값을 반환한다.
+      key = _.findKey(obj, predicate, context);
+    }
+
+    // 키값이 undefined , 0 이아니거나
+    // 반환받은 key값이 -1(findKey와 findIndex에서 predicate에 만족하는 값을 못찾았을경우 -1을 반환)이 아닌경우는 해당 value값을 반환한다.
+    if (key !== void 0 && key !== -1) return obj[key];
+};
+
+
+【_.filter(list, predicate, [context]) 】
+배열 또는 오브젝트의 값중에 predicate에 만족하고있는 값들을 배열로 반환한다.
+
+_.filter = _.select = function(obj, predicate, context) {
+    var results = [];
+    predicate = cb(predicate, context);
+
+    // each를 사용해서 각각의 값을 predicate에 대입하여 리턴(true일까아닐까)을받는다
+    // true인경우 해당값을 result에 push한다.
+    _.each(obj, function(value, index, list) {
+      if (predicate(value, index, list)) results.push(value);
+    });
+    return results;
+  };
+
+
+【_.where(list, properties)  】
+배열의 값중에 properties 오브젝트에서 지정한 키와 그값을 가지고있는 값들을 배열로 반환한다.
+
+_.where = function(obj, attrs) {
+    // matcher은 attrs에서 지정한 키와 값과 같은것이 있는지 판별하는 함수를 전달.
+    // Returns a predicate for checking whether an object has a given set of key:value pairs.
+    // 객체에 주어진 key : value 쌍의 집합이 있는지 확인하기위한 조건자를 반환합니다.
+    // _.matcher안에는 _.isMatch가 있는데 isMatch는 _.isMatch = function(object, attrs)
+    // object안에 attrs(key:value)의 key와 value가 포함되어있으면 true를 아니면 false를 반환한다.
+    return _.filter(obj, _.matcher(attrs));
+};
+
+
+
+【_.findWhere(list, properties)   】
+배열의 값중에 properties 오브젝트에서 지정한 키와 그 값을 가지고있는 배열의 최초의 값을 반환한다.
+
+_.findWhere = function(obj, attrs) {
+    return _.find(obj, _.matcher(attrs));
+};
+
+
+【_.reject(list, predicate, [context]) 】
+배열의 값중에 predicate함수의 조건에 만족하지 않는 값들만 배열로 반환한다.
+
+_.reject = function(obj, predicate, context) {	
+    // _.negate()는 predicate에 반대되는 값을 돌려준다.  
+    return _.filter(obj, _.negate(cb(predicate)), context);
+};
