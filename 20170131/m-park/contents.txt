@@ -72,10 +72,8 @@ _.compact([0, 1, false, 2, '', 3]);
 
 
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
-
+//다차원 배열을 1차원으로 만듬
 flatten_.flatten(array, [shallow]) 
-Flattens a nested array (the nesting can be to any depth). If you pass shallow, the array will only be flattened a single level.
-
 _.flatten([1, [2], [3, [[4]]]]);
 => [1, 2, 3, 4];
 
@@ -83,8 +81,75 @@ _.flatten([1, [2], [3, [[4]]]], true);
 => [1, 2, 3, [[4]]];
 
 
+  // Internal implementation of a recursive `flatten` function.
+  //해당 파라메타로 밑의 함수가 실행된다
+  return flatten(array, shallow, false);
+
+  var flatten = function(input, shallow, strict, output) {
+    //output 이 있으면 output에 넣고, 없으면 빈 array를 생성, 현재 flatten에서는 빈 어레이
+    output = output || [];
+    var idx = output.length;
+    //1차원 배열로 변경할 함수의 길이를 구해서 반복함.
+    for (var i = 0, length = getLength(input); i < length; i++) {
+      var value = input[i];
+      // 반복한 value값이 array인지(다차원 배열인지확인)
+      if (isArrayLike(value) && (_.isArray(value) || _.isArguments(value))) {
+        // shallow가 true이면 1차원씩만 제거, 아니면 전부다 1차원으로 만듬
+        if (shallow) {
+          //한차원씩만 제거하는 반복문
+          var j = 0, len = value.length;
+          while (j < len) output[idx++] = value[j++];
+        } else {
+          //재귀함수 이용. 1차원 배열로 만들게됨 (value가 배열이 output 객체로 들어가게됨)
+          flatten(value, shallow, strict, output);
+          //들어간 만큼 index값을 변경
+          idx = output.length;
+        }
+      } else if (!strict) {
+        //value가 어레이값이 아닐 경우 그냥 넣음
+        output[idx++] = value;
+      }
+    }
+    return output;
+  };
+
+  // Flatten out an array, either recursively (by default), or just one level.
+  _.flatten = function(array, shallow) {
+    return flatten(array, shallow, false);
+  };
+
+
 ーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー
+values를 제거한 배열을 돌려 준다. === 연산자 로 비교된다
 without_.without(array, *values) 
 Returns a copy of the array with all instances of the values removed.
 _.without([1, 2, 1, 0, 3, 1, 4], 0, 1);
 => [2, 3, 4]
+  // array에서 otherArray이외의 값을 리턴시킴.
+  _.without = restArgs(function(array, otherArrays) {
+    return _.difference(array, otherArrays);
+  });
+
+//call, apply로 function의 this확인
+  var restArgs = function(func, startIndex) {
+    startIndex = startIndex == null ? func.length - 1 : +startIndex;
+    return function() {
+      var length = Math.max(arguments.length - startIndex, 0),
+          rest = Array(length),
+          index = 0;
+      for (; index < length; index++) {
+        rest[index] = arguments[index + startIndex];
+      }
+      switch (startIndex) {
+        case 0: return func.call(this, rest);
+        case 1: return func.call(this, arguments[0], rest);
+        case 2: return func.call(this, arguments[0], arguments[1], rest);
+      }
+      var args = Array(startIndex + 1);
+      for (index = 0; index < startIndex; index++) {
+        args[index] = arguments[index];
+      }
+      args[startIndex] = rest;
+      return func.apply(this, args);
+    };
+  };
