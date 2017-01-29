@@ -1,0 +1,7 @@
+﻿- first
+- initial
+- last
+- rest
+- compact
+- flatten
+- without
