@@ -167,4 +167,3 @@ _.range([start], stop, [step])
 
     return range;
   };
-http://qiita.com/ikasumi_wt/items/8c4fe94c42079eb98c7b
