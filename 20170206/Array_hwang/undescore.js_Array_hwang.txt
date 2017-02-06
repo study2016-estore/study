@@ -97,6 +97,7 @@ _.indexOf(array, value, [isSorted])
 첫번째 인수 (array)에 두번째인수의 값이 포함되어 있을때 첫번째인수의 배열 index를 반환.(해당값이 있는 제일처음의 인덱스를반환)
  
 _.indexOf = createIndexFinder(1, _.findIndex, _.sortedIndex);
+_.lastIndexOf = createIndexFinder(-1, _.findLastIndex);
  
   function createIndexFinder(dir, predicateFind, sortedIndex) {
     return function(array, item, idx) {
