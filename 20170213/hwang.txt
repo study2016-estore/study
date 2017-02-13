@@ -1,0 +1,180 @@
+_.mixin(object) 란?
+Underscore JS에 인수로 넘겨진 메소드를 추가시켜 사용 할 수 있게 한다.
+
+Pass a hash of {name: function} definitions to have your functions added to the Underscore object
+=>Underscore 객체에 함수를 추가하려면 {name : function} 정의의 해시를 전달
+
+예제 )
+_.mixin({
+  capitalize: function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+  }
+});
+_("fabio").capitalize();
+=> "Fabio"
+_.capitalize("fabio");
+=> "Fabio"
+
+코드 )
+  var result = function(instance, obj) {
+    return instance._chain ? _(obj).chain() : obj;
+  };
+
+  _.mixin = function(obj) {
+    _.each(_.functions(obj), function(name) {
+      var func = _[name] = obj[name];
+      _.prototype[name] = function() {
+        var args = [this._wrapped];
+        push.apply(args, arguments);
+        return result(this, func.apply(_, args));
+      };
+    });
+  };
+
+
+_.iteratee(value, [context]) 란?
+인수의 형태를 판별 함수를 반환하는 함수 cb ()에 인자를 전달하는 함수.
+
+예제 )
+// No value
+_.iteratee();
+=> _.identity()
+
+// Function
+_.iteratee(function(n) { return n * 2; });
+=> function(n) { return n * 2; }
+
+// Object
+_.iteratee({firstName: 'Chelsea'});
+=> _.matcher({firstName: 'Chelsea'});
+
+// Anything else
+_.iteratee('firstName');
+=> _.property('firstName');
+
+코드 )
+  var cb = function(value, context, argCount) {
+    if (value == null) return _.identity;
+    if (_.isFunction(value)) return optimizeCb(value, context, argCount);
+    if (_.isObject(value)) return _.matcher(value);
+    return _.property(value);
+  };
+
+  _.iteratee = function(value, context) {
+    return cb(value, context, Infinity);
+  };
+
+
+
+
+
+_.uniqueId([prefix]) 란?
+인수가있을 때는 "인수 + 카운트 한 숫자"인수가 없을 때는 '카운트 한 숫자 "를 반환.
+
+예제 ) 
+var test = "test";
+
+var test1 = _.uniqueId(test);
+console.log(test1); // test1
+
+var test2 = _.uniqueId(test);
+console.log(test2); // test2
+
+var kk = "kk1";
+var aa = "aa1";
+console.log(_.uniqueId(kk));
+console.log(_.uniqueId(kk));
+
+console.log(_.uniqueId(aa));
+console.log(_.uniqueId(aa));
+
+코드 )
+  var idCounter = 0;
+  _.uniqueId = function(prefix) {
+    // ''를 붙인건 스트링으로 미리 해놓 prefix를 붙이기 위함인가
+    var id = ++idCounter + '';
+    return prefix ? prefix + id : id;
+  };
+
+
+
+
+_.escape(string) 란?
+인수의 문자열에 
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
+왼쪽편 문자를 오른쪽편 문자로 바꿔서 반환.
+
+예제 ) 
+_.escape('Curly, Larry & Moe');
+=> "Curly, Larry &amp; Moe"
+
+코드 )
+  var escapeMap = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+    '`': '&#x60;'
+  };
+  var unescapeMap = _.invert(escapeMap);
+
+  var createEscaper = function(map) {
+    var escaper = function(match) {
+      return map[match];
+    };
+
+    ///(?:&|<|>|"|'|`)/;
+    var source = '(?:' + _.keys(map).join('|') + ')';
+    var testRegexp = RegExp(source);
+    
+    //global match; 일치하는 첫 번째 문자에서 멈추지 않고 전체에서 일치하는 모든 문자를 검색합니다.
+    var replaceRegexp = RegExp(source, 'g');
+
+    return function(string) {
+      //string 이 null인지 확인
+      string = string == null ? '' : '' + string;
+
+      //.test로 일치하는 문자가있는지 확인 true OR false 
+      //replaceRegexp로 문자열을 찾고 escaper에 해당 문자열을 넘겨주면 escaper에서 map[match] 키값으로 찾아 반환한다. 
+      return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+    };
+  };
+  _.escape = createEscaper(escapeMap);
+  _.unescape = createEscaper(unescapeMap);
+
+
+
+
+
+_.result(object, property, [defaultValue]) 란?
+object의 key값중 property에 해당하는 값을 찾아 그 값이 함수가 아니면 그대로 그값을 반환, 함수이면 함수에 적용시킨 값을 반환, 
+찾는 키값이 없으면 defaultValue로 적용한 값을 반환.
+
+예제 ) 
+var object = {cheese: 'crumpets', stuff: function(){ return 'nonsense'; }};
+_.result(object, 'cheese');
+=> "crumpets"
+_.result(object, 'stuff');
+=> "nonsense"
+_.result(object, 'meat', 'ham');
+=> "ham"
+
+코드 )
+  _.result = function(object, property, fallback) {
+    // 오브젝트가 널이면 undefined , null이 아니면 오브젝트의 해당 값을 가져옴
+    var value = object == null ? void 0 : object[property];
+    
+    // 첫번째인수가 정해져있지 않은상태면 벨류값은 마지막값 default값을 돌려줌
+    if (value === void 0) {
+      value = fallback;
+    }
+
+    // 벨류가 함수이면 벨류값을 this로 설정해 object를실행
+    return _.isFunction(value) ? value.call(object) : value;
+  };
