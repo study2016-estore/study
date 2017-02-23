@@ -1,0 +1,183 @@
+﻿예제데스-------------------------------------------------------------------------------
+
+_.mixin({
+  capitalize: function(string) {
+    return string.charAt(0).toUpperCase() + string.substring(1).toLowerCase();
+  }
+});
+_("fabio").capitalize();
+=> "Fabio"
+
+예제데스-------------------------------------------------------------------------------
+
+코드데스-------------------------------------------------------------------------------
+
+var result = function(instance, obj) {
+
+// instance._chain이 ture ㅇㅣ면 랩프드해서 인스턴스를 돌려줌..!?
+    return instance._chain ? _(obj).chain() : obj;
+};
+  
+_.mixin = function(obj) {
+
+// obj의 메소드를 언더스코어 내부에 추가 
+//_.functions(obj) -> capitalize반환
+//name -> capitalize
+    _.each(_.functions(obj), function(name) {
+       
+// _[capitalize] , func에 지정한 함수를 넣는다
+      var func = _[name] = obj[name];
+
+// _.prototype['map']; 프로토타입에 있는 메소드function(){~}를 확인가눙  
+      _.prototype[name] = function() {
+         
+// args 넘긴인수?!_().~로쓰게되면 _ 가불려옴?!
+        var args = [this._wrapped];
+
+// _.capitalize()로썼을때 넘어온 인수들을 args에 푸쉬
+        push.apply(args, arguments);
+
+// _<-얘뭔데
+        return result(this, func.apply(_, args));
+      };
+// _.prototype[name]() 정의완료
+    });
+
+};
+
+코드데스-------------------------------------------------------------------------------
+
+
+
+
+예제데스-------------------------------------------------------------------------------
+
+var stooges = [{name: 'curly', age: 25}, {name: 'moe', age: 21}, {name: 'larry', age: 23}];
+var youngest = _.chain(stooges)
+  .sortBy(function(stooge){ return stooge.age; })
+  .map(function(stooge){ return stooge.name + ' is ' + stooge.age; })
+  .first();
+=>{_wrapped: "moe is 21", _chain: true}
+
+var stooges = [{name: 'curly', age: 25}, {name: 'moe', age: 21}, {name: 'larry', age: 23}];
+var youngest = _.chain(stooges)
+  .sortBy(function(stooge){ return stooge.age; })
+  .map(function(stooge){ return stooge.name + ' is ' + stooge.age; })
+  .first().value();
+=>moe is 21
+
+
+//Calling methods on this object will continue to return wrapped objects until value is called.
+var stooges = [{name: 'curly', age: 25}, {name: 'moe', age: 21}, {name: 'larry', age: 23}];
+var youngest = _.chain(stooges)
+  .sortBy(function(stooge){ return stooge.age; })
+  .map(function(stooge){ return stooge.name + ' is ' + stooge.age; })
+  .first()
+  .value();
+=> "moe is 21"
+
+예제데스-------------------------------------------------------------------------------
+
+코드데스-------------------------------------------------------------------------------
+
+//체인함수는 언더스코어의 인스턴스를 작성해주는듯?!
+  _.chain = function(obj) {
+    var instance = _(obj);
+//체인은 투루~
+    instance._chain = true;
+//Returns a wrapped object. 렙프드된 오브젝트를 리턴~
+    return instance;
+  };
+
+
+  var _ = function(obj) {
+    //언더스코어의 obj는 그자체를 돌려주고
+    if (obj instanceof _) return obj;
+    //언더스코어의 _ 를사용해 만들어진 obj가 아닌경우는 _의 인스턴스로 생성해 돌려준다?!
+그래야 언더스코어의 아이들을사용할수잇우니가?!
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+  };
+
+코드데스-------------------------------------------------------------------------------
+
+
+
+예제데스-------------------------------------------------------------------------------
+<하나의 예제게 100번의 설명보다 낫다.>
+
+var compiled = _.template("hello: <%= name %>");
+compiled({name: 'moe'});
+=> "hello: moe"
+
+var template = _.template("<b><%- value %></b>");
+template({value: '<script>'});
+=> "<b>&lt;script&gt;</b>"
+
+예제데스-------------------------------------------------------------------------------
+
+코드데스-------------------------------------------------------------------------------
+
+_.templateSettings = {
+    evaluate    : /<%([\s\S]+?)%>/g,
+    interpolate : /<%=([\s\S]+?)%>/g,
+    escape      : /<%-([\s\S]+?)%>/g
+};
+var noMatch = /(.)^/;
+var escaper = /\\|'|\r|\n|\u2028|\u2029/g;
+var escapeChar = function(match) {
+    return '\\' + escapes[match];
+};
+     
+  _.template = function(text, settings, oldSettings) {
+    if (!settings && oldSettings) settings = oldSettings;
+    settings = _.defaults({}, settings, _.templateSettings);
+    
+    var matcher = RegExp([
+      (settings.escape || noMatch).source,
+      (settings.interpolate || noMatch).source,
+      (settings.evaluate || noMatch).source
+    ].join('|') + '|$', 'g');
+    
+    var index = 0;
+    var source = "__p+='";
+    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+      source += text.slice(index, offset).replace(escaper, escapeChar);
+      index = offset + match.length;
+
+      if (escape) {
+        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+      } else if (interpolate) {
+        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+      } else if (evaluate) {
+        source += "';\n" + evaluate + "\n__p+='";
+      }
+      
+    return match;
+    });
+    source += "';\n";
+    
+    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+    source = "var __t,__p='',__j=Array.prototype.join," +
+      "print=function(){__p+=__j.call(arguments,'');};\n" +
+      source + 'return __p;\n';
+
+    try {
+      var render = new Function(settings.variable || 'obj', '_', source);
+    } catch (e) {
+      e.source = source;
+      throw e;
+    }
+
+    var template = function(data) {
+      return render.call(this, data, _);
+    };
+    
+    var argument = settings.variable || 'obj';
+    template.source = 'function(' + argument + '){\n' + source + '}';
+
+    return template;
+  };
+
+코드데스-------------------------------------------------------------------------------
